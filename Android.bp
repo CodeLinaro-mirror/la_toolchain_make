@@ -15,6 +15,8 @@
 cc_binary_host {
     name: "make",
 
+    c_std: "gnu99",
+
     cflags: [
         "-DHAVE_CONFIG_H",
         "-DINCLUDEDIR=0",
