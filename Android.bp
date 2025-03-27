@@ -1,0 +1,112 @@
+// Copyright 2018 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+cc_binary_host {
+    name: "make",
+
+    c_std: "gnu99",
+
+    cflags: [
+        "-DHAVE_CONFIG_H",
+        "-DINCLUDEDIR=0",
+        "-DLIBDIR=0",
+        "-DLOCALEDIR=NULL",
+
+        "-Wno-dangling-else",
+        "-Wno-deprecated-non-prototype",
+        "-Wno-format",
+        "-Wno-incompatible-pointer-types",
+        "-Wno-string-compare",
+        "-Wno-unused-parameter",
+    ],
+    stl: "none",
+
+    local_include_dirs: ["lib", "src"],
+
+    srcs: [
+        // make_SRCS
+        "src/ar.c",
+        "src/arscan.c",
+        "src/commands.c",
+        "src/default.c",
+        "src/dir.c",
+        "src/expand.c",
+        "src/file.c",
+        "src/function.c",
+        "src/getopt.c",
+        "src/getopt1.c",
+        "src/guile.c",
+        "src/hash.c",
+        "src/implicit.c",
+        "src/job.c",
+        "src/load.c",
+        "src/loadapi.c",
+        "src/main.c",
+        "src/misc.c",
+        "src/output.c",
+        "src/read.c",
+        "src/remake.c",
+        "src/rule.c",
+        "src/signame.c",
+        "src/strcache.c",
+        "src/variable.c",
+        "src/version.c",
+        "src/vpath.c",
+
+        // USE_CUSTOMS
+        "src/remote-stub.c",
+
+        "lib/concat-filename.c",
+        "lib/exitfail.c",
+        "lib/findprog-in.c",
+        "lib/fnmatch.c",
+        "lib/glob.c",
+        "lib/xalloc-die.c",
+        "lib/xconcat-filename.c",
+    ],
+
+    target: {
+        glibc: {
+            local_include_dirs: ["soong/linux_glibc"],
+            srcs: [
+                "lib/getloadavg.c",
+            ],
+        },
+        musl: {
+            local_include_dirs: ["soong/linux_musl"],
+            srcs: [
+                "lib/getloadavg.c",
+            ],
+        },
+        darwin: {
+            local_include_dirs: ["soong/darwin"],
+
+            // This isn't being distributed to end-users, so bump up our machine
+            // requirements.
+            cflags: [
+                "-mmacosx-version-min=10.13",
+                "-UMACOSX_DEPLOYMENT_TARGET",
+                "-DMACOSX_DEPLOYMENT_TARGET=10.13",
+            ],
+            ldflags: [
+                "-mmacosx-version-min=10.13",
+            ],
+        },
+        not_windows: {
+            srcs: [
+                "src/posixos.c",
+            ],
+        },
+    },
+}

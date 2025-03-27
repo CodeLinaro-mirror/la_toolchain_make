@@ -1,0 +1,1 @@
+../gnulib/doc/make-stds.texi
