@@ -1,3 +1,6 @@
+#define _GNU_SOURCE 1
+#include <features.h>
+
 /* src/config.h.  Generated from config.h.in by configure.  */
 /* src/config.h.in.  Generated from configure.ac by autoheader.  */
 
@@ -232,7 +235,11 @@
 
 /* Define to 1 if you have the declaration of `bsd_signal', and to 0 if you
    don't. */
+#if __GLIBC_PREREQ(2, 26)
+#define HAVE_DECL_BSD_SIGNAL 0
+#else
 #define HAVE_DECL_BSD_SIGNAL 1
+#endif
 
 /* Define to 1 if you have the declaration of `dlerror', and to 0 if you
    don't. */
